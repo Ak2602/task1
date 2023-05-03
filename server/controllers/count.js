@@ -1,7 +1,7 @@
 import { con } from "../config/db.js";
 import { users } from "../modals/user.model.js";
 
-export const auth = async (req, res) => {
+export const count = async (req, res) => {
   try {
     // var val = Math.floor(1000 + Math.random() * 9000);
     let username = req.body.email;
@@ -13,20 +13,28 @@ export const auth = async (req, res) => {
           password: password,
         },
       });
-      if (user) {
-        res.status(200).json({ status: true });
+      if (user.id === 1) {
+        con.sync().then(async () => {
+          await users
+            .findAll()
+            .then((results) => {
+              res
+                .status(200)
+                .json({ records: results.length, results: results });
+            })
+            .catch((error) => {
+              res.status(404).json(error);
+            });
+        });
       } else {
         con.sync().then(async () => {
           await users
-            .create({
-              email: username,
-              password: password,
-            })
-            .then((msg) => {
-              res.status(201).json(msg);
+            .findAll()
+            .then((results) => {
+              res.status(200).json({ record: results.length });
             })
             .catch((error) => {
-              res.status(500).json(error);
+              res.status(404).json(error);
             });
         });
       }

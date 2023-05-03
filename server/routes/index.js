@@ -1,5 +1,6 @@
 import express from "express";
 import { auth } from "../controllers/auth.js";
+import { count } from "../controllers/count.js";
 
 const indexRouter = express.Router();
 
@@ -9,5 +10,7 @@ indexRouter.get("/", function (req, res) {
 });
 
 indexRouter.post("/login", auth);
+
+indexRouter.post("/countApi", count);
 
 export default indexRouter;
